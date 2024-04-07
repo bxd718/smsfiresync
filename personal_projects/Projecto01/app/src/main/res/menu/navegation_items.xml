@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/home_itm"
+            android:icon="@drawable/ic_home"
+            android:title="@string/home">
+
+        </item>
+        <item
+            android:id="@+id/add_itm"
+            android:icon="@drawable/ic_add"
+            android:title="@string/adicionar">
+
+        </item>
+        <item
+            android:id="@+id/preco_itm"
+            android:icon="@drawable/ic_price"
+            android:title="@string/preco">
+
+        </item>
+
+        <item android:title="@string/comunication">
+            <menu>
+                <item
+                    android:id="@+id/log_out"
+                    android:icon="@drawable/ic_logout"
+                    android:title="@string/log_out">
+
+                </item>
+
+                <item
+                    android:id="@+id/log_exit"
+                    android:icon="@drawable/ic_power"
+                    android:title="@string/sair">
+
+                </item>
+
+            </menu>
+
+        </item>
+
+    </group>
+
+
+</menu>

@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "88068645651",
+    "firebase_url": "https://message-validator-4e76a-default-rtdb.firebaseio.com",
+    "project_id": "message-validator-4e76a",
+    "storage_bucket": "message-validator-4e76a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:88068645651:android:ccfe1425c9d24c1fb4b0e6",
+        "android_client_info": {
+          "package_name": "mz.ac.bxd.project.sms_listener"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDuDHjoRnfKHrIlA1OsS8hBXUFbk0y14Og"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
