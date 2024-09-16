@@ -15,7 +15,7 @@ public class Utils {
 
     void criarRecarga(String sender, String mensagem) {
 
-        if("eMola".equalsIgnoreCase(sender)) {
+       if("eMola".equalsIgnoreCase(sender)) {
             salvarRecargaNoFirebase(ExtractedDataFromMessage.extractDataFromMessageEmola(mensagem));
         }else if("M-Pesa".equalsIgnoreCase(sender)) {
             salvarRecargaNoFirebase(ExtractedDataFromMessage.extractDataFromMessageMpesa(mensagem));

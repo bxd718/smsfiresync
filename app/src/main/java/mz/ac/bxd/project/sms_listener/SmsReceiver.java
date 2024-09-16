@@ -48,9 +48,9 @@ public class SmsReceiver extends BroadcastReceiver {
                             String sender = currentMessage.getDisplayOriginatingAddress();
                             String completeMessage = "Sender: " + sender + " Message: " + fullMessage.toString();
                              // Verificar se está recebendo uma mensagem do Emola ou do Mpesa
-                             if ("eMola".equalsIgnoreCase(sender) || "M-Pesa".equalsIgnoreCase(sender)) {
+                            if ("eMola".equalsIgnoreCase(sender) || "M-Pesa".equalsIgnoreCase(sender)) {
                                 utils.criarRecarga(sender, fullMessage.toString());
-                             }
+                            }
                             Log.d("TAG", "Message : " + completeMessage);
                         }
                     }
