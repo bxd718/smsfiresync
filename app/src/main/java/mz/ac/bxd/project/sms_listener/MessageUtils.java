@@ -7,13 +7,15 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class MessageUtils {
     private static final String FILE_NAME = "pending_sms.txt";
-    private Context context;
-    private FirebaseCrashlytics crashlytics = FirebaseCrashlytics.getInstance();
+    private final Context context;
+    private final FirebaseCrashlytics crashlytics = FirebaseCrashlytics.getInstance();
 
     public MessageUtils(Context context) {
         this.context = context;
@@ -33,50 +35,92 @@ public class MessageUtils {
         }
     }
 
-    public void sendPendingMessages(final Utils utils) {
-        if (!NetworkUtils.isConnectedToInternet(context)) {
-            Log.d("MessageUtils", "No internet connection. Will not attempt to send pending messages.");
-            crashlytics.log("No internet connection. Will not attempt to send pending messages.");
-            return;
-        }
+    public void sendPendingMessages(final Utils utils) throws IOException {
+        FileInputStream fis = null;
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Log.d("MessageUtils", "Reading pending messages from file: " + FILE_NAME);
-                    crashlytics.log("Reading pending messages from file: " + FILE_NAME);
-                    FileInputStream fis = context.openFileInput(FILE_NAME);
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(fis));
-                    String line;
+        try {
+            // Attempt to open the file containing pending messages
+            fis = context.openFileInput(FILE_NAME);
 
-                    while ((line = reader.readLine()) != null) {
-                        Log.d("MessageUtils", "Pending message found: " + line);
-                        crashlytics.log("Pending message found: " + line);
-                        String[] parts = line.split("Message: ");
-                        String sender = parts[0].replace("Sender: ", "").trim();
-                        String message = parts[1].trim();
+            // Check if there's an internet connection
+            if (!NetworkUtils.isConnectedToInternet(context)) {
+                Log.d("MessageUtils", "No internet connection. Will not attempt to send pending messages.");
+                crashlytics.log("No internet connection. Will not attempt to send pending messages.");
+                return;
+            }
 
-                        Log.d("MessageUtils", "Attempting to send message: " + message);
-                        crashlytics.log("Attempting to send message: " + message);
-                        utils.criarRecarga(sender, message);
+            // Check if the file is empty
+            if (fis.available() == 0) {
+                Log.d("MessageUtils", "Pending messages file is empty.");
+                crashlytics.log("Pending messages file is empty.");
+                fis.close();
+                return;
+            }
+
+            // Start a new thread to process the file contents
+            FileInputStream finalFis = fis;
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        Log.d("MessageUtils", "Reading pending messages from file: " + FILE_NAME);
+                        crashlytics.log("Reading pending messages from file: " + FILE_NAME);
+
+                        BufferedReader reader = new BufferedReader(new InputStreamReader(finalFis));
+                        String line;
+
+                        // Process each line in the file
+                        while ((line = reader.readLine()) != null) {
+                            Log.d("MessageUtils", "Pending message found: " + line);
+                            crashlytics.log("Pending message found: " + line);
+
+                            // Split the line into sender and message
+                            String[] parts = line.split("Message: ");
+                            String sender = parts[0].replace("Sender: ", "").trim();
+                            String message = parts[1].trim();
+
+                            Log.d("MessageUtils", "Attempting to send message: " + message);
+                            crashlytics.log("Attempting to send message: " + message);
+
+                            // Send the message
+                            utils.criarRecarga(sender, message);
+                        }
+
+                        // Close the reader and file input stream
+                        reader.close();
+                        finalFis.close();
+
+                        Log.d("MessageUtils", "All pending messages processed.");
+                        crashlytics.log("All pending messages processed.");
+
+                        // Clear the file after processing all messages
+                        clearPendingMessagesFile();
+
+                    } catch (Exception e) {
+                        Log.d("MessageUtils", "Error reading or sending pending messages: " + e);
+                        crashlytics.log("Error reading or sending pending messages: " + e);
                     }
+                }
+            }).start();
 
-                    reader.close();
+        } catch (FileNotFoundException e) {
+            // Handle case where the file doesn't exist
+            Log.d("MessageUtils", "Pending messages file not found: " + e);
+            crashlytics.log("Pending messages file not found: " + e);
+
+        } finally {
+            // Ensure the FileInputStream is closed if it was opened
+            if (fis != null) {
+                try {
                     fis.close();
-                    Log.d("MessageUtils", "All pending messages processed.");
-                    crashlytics.log("All pending messages processed.");
-
-                    // Clear file after processing all messages
-                    clearPendingMessagesFile();
-
-                } catch (Exception e) {
-                    Log.d("MessageUtils", "Error reading or sending pending messages: " + e);
-                    crashlytics.log("Error reading or sending pending messages: " + e);
+                } catch (IOException e) {
+                    Log.d("MessageUtils", "Error closing FileInputStream: " + e);
+                    crashlytics.log("Error closing FileInputStream: " + e);
                 }
             }
-        }).start();
+        }
     }
+
 
 
     private void clearPendingMessagesFile() {

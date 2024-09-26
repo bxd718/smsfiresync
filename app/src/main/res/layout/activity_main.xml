@@ -7,17 +7,25 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-
-
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Este aplicativo é sem interface grafica pois processa automaticamente as mensagens SMS recebidas, extrai informações relevantes, e armazena esses dados em um banco de dados para análise posterior. O processamento ocorre em segundo plano, proporcionando uma experiência tranquila. Se precisar de ajuda, entre em contato Devbxd."
-        android:textColor="@color/white"
-        android:textSize="16sp"
-        android:layout_gravity="center"
-         android:lineSpacingMultiplier="1.2"/>
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp"
+        tools:ignore="UselessParent">
 
+        <TextView
+            android:layout_marginTop="15sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:lineSpacingMultiplier="1.2"
+            android:text="@string/coment_dev"
+            android:textColor="@color/white"
+            android:textSize="14sp" />
+
+
+    </LinearLayout>
 
 
 </LinearLayout>

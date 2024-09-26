@@ -14,13 +14,12 @@ import com.google.firebase.database.FirebaseDatabase;
 public class SmsReceiver extends BroadcastReceiver {
 
     public SmsReceiver() {}
-    private FirebaseCrashlytics crashlytics = FirebaseCrashlytics.getInstance();
 
     @SuppressLint("UnsafeProtectedBroadcastReceiver")
     @Override
     public void onReceive(Context context, Intent intent) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        crashlytics = FirebaseCrashlytics.getInstance();
+        FirebaseCrashlytics crashlytics = FirebaseCrashlytics.getInstance();
         Utils utils = new Utils(database);
         MessageUtils messageUtils = new MessageUtils(context);
 
@@ -49,8 +48,8 @@ public class SmsReceiver extends BroadcastReceiver {
                                 }
                            // }
 
-                            Log.d("TAG", "Message: Sender: " + sender + " Message: " + fullMessage.toString());
-                            crashlytics.log("Message: Sender: " + sender + " Message: " + fullMessage.toString());
+                            Log.d("TAG", "Message: Sender: " + sender + " Message: " + fullMessage);
+                            crashlytics.log("Message: Sender: " + sender + " Message: " + fullMessage);
 
                         }
                     }
@@ -70,12 +69,8 @@ public class SmsReceiver extends BroadcastReceiver {
 
     private SmsMessage getIncomingMessage(Object object, Bundle bundle) {
         SmsMessage currentSMS;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-            String format = bundle.getString("format");
-            currentSMS = SmsMessage.createFromPdu((byte[]) object, format);
-        } else {
-            currentSMS = SmsMessage.createFromPdu((byte[]) object);
-        }
+        String format = bundle.getString("format");
+        currentSMS = SmsMessage.createFromPdu((byte[]) object, format);
         return currentSMS;
     }
 }

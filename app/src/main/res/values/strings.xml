@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">sms-listener</string>
+    <string name="coment_dev">Descrição do Aplicativo\nEste aplicativo opera totalmente em segundo plano, sem a necessidade de uma interface gráfica. Ele processa automaticamente as mensagens SMS recebidas, extrai informações relevantes e recarrega as contas associadas de forma automática. Além disso, todos os dados são armazenados em um banco de dados para análise futura, garantindo uma experiência fluida e sem interrupções.\n\nCaso precise de suporte ou tenha dúvidas, entre em contato pelo e-mail: *edson.langa@yandex.com*.</string>
 </resources>

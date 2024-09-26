@@ -1,26 +1,27 @@
 package mz.ac.bxd.project.sms_listener;
 
-import android.content.Context;
 import android.util.Log;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import org.json.JSONException;
 import java.io.IOException;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ExtractedDataFromMessage {
 
-    private String idRecarga;
     private String dataRecarga;
     private String valorRecarga;
     private String contacto;
-    private Context context;
     static FleetTransactionService transactionService = new FleetTransactionService();
-    private FirebaseCrashlytics crashlytics = FirebaseCrashlytics.getInstance();
+    private final FirebaseCrashlytics crashlytics;
+
+    static {
+        FirebaseCrashlytics.getInstance();
+    }
 
     // Constructor to initialize Context and Crashlytics
-    public ExtractedDataFromMessage(Context context) {
-        this.context = context;
+    public ExtractedDataFromMessage() {
         this.crashlytics = FirebaseCrashlytics.getInstance();  // Initialize Crashlytics
         crashlytics.log("ExtractedDataFromMessage initialized");
     }
@@ -33,18 +34,19 @@ public class ExtractedDataFromMessage {
             Pattern patternIdTransacao = Pattern.compile(padraoIdTransacao);
             Matcher matcherIdTransacao = patternIdTransacao.matcher(mensagem);
 
+            String idRecarga;
             if (matcherIdTransacao.find()) {
                 idRecarga = matcherIdTransacao.group(2);
             } else {
                 idRecarga = "Emola";
             }
 
-            String padraoValor = "\\b(\\d*([\\d\\,]*)\\.?\\d+)MT\\b";
+            String padraoValor = "\\b(\\d*([\\d,]*)\\.?\\d+)MT\\b";
             Pattern patternValor = Pattern.compile(padraoValor);
             Matcher matcherValor = patternValor.matcher(mensagem);
 
             if (matcherValor.find()) {
-                valorRecarga = matcherValor.group(1).replace(",", "");
+                valorRecarga = Objects.requireNonNull(matcherValor.group(1)).replace(",", "");
             }
 
             String padraoHoraData = "as (\\d{2}:\\d{2}:\\d{2})(?: de)? (\\d{2}/\\d{2}/\\d{4})";
@@ -85,7 +87,7 @@ public class ExtractedDataFromMessage {
 
         String idRecarga = null;
         String dataRecarga = null;
-        String valorRecarga = null;
+        String valorRecarga;
         String contacto = null;
 
         try {
@@ -97,12 +99,12 @@ public class ExtractedDataFromMessage {
             }
 
             // Extract value
-            String padraoValor = "\\b(\\d*([\\d\\,]*)\\.?\\d+)MT\\b";
+            String padraoValor = "\\b(\\d*([\\d,]*)\\.?\\d+)MT\\b";
             Pattern patternValor = Pattern.compile(padraoValor);
             Matcher matcherValor = patternValor.matcher(mensagem);
 
             if (matcherValor.find()) {
-                valorRecarga = matcherValor.group(1).replace(",", "");
+                valorRecarga = Objects.requireNonNull(matcherValor.group(1)).replace(",", "");
             } else {
                 idRecarga = "Mpesa";
                 dataRecarga = "data";

@@ -36,14 +36,6 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".NetworkChangeReceiver"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"
-                    tools:ignore="BatteryLife" />
-            </intent-filter>
-        </receiver>
-
         <receiver
             android:name=".SmsReceiver"
             android:enabled="true"
