@@ -39,7 +39,8 @@ public class Utils {
                      recarga = extractedData.extractDataFromMessageMpesa(mensagem);
                     // Call the method to save to Firebase
                     salvarRecargaNoFirebase(recarga);
-                }
+
+               }
 
             } catch (IOException | JSONException e) {
                 e.printStackTrace();
